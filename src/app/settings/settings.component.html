@@ -1,0 +1,93 @@
+<form>
+    <mat-accordion>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>Jira</mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-form-field>
+                <input matInput #jiraServerUrl
+                       placeholder="Server Url"
+                       [value]="settingsService.jiraServerUrl | async"
+                       (change)="settingsService.setJiraServerUrl(jiraServerUrl.value)"
+                       name="test11">
+            </mat-form-field>
+
+            <br>
+
+            <mat-slide-toggle #jiraUseCookieOnly
+                    [checked]="settingsService.jiraUseCookieOnly | async"
+                    (change)="settingsService.setJiraUseCookieOnly(jiraUseCookieOnly.checked)"
+            >Use Cookies Only</mat-slide-toggle>
+
+            <fieldset [disabled]="settingsService.jiraUseCookieOnly | async">
+                <mat-form-field>
+                    <input matInput #jiraUserName
+                           placeholder="User (short)"
+                           [value]="settingsService.jiraUserName | async"
+                           (change)="settingsService.setJiraUserName(jiraUserName.value)"
+                           name="test13">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput #jiraPassword
+                           placeholder="Password"
+                           [value]="settingsService.jiraPassword | async"
+                           (change)="settingsService.setJiraPassword(jiraPassword.value)"
+                           type="password"
+                           name="test14">
+                </mat-form-field>
+            </fieldset>
+
+            <div class="status">
+                <span>
+                    User Name: <strong>{{jiraService.displayName | async}}</strong>
+                    <a *ngIf="(settingsService.jiraUseCookieOnly | async) && !(jiraService.displayName | async)" href="{{settingsService.jiraServerUrl | async}}" target="_blank">Log In</a>
+                </span>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>Toggle</mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-form-field class="long">
+                <input matInput #togglApiKey
+                       [value]="settingsService.togglApiKey | async"
+                       (change)="settingsService.setTogglApiKey(togglApiKey.value)"
+                       name="test21">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Jira Key Storage</mat-label>
+                <mat-select #togglJiraKeyStorage
+                        [value]="settingsService.togglJiraKeyStorage | async"
+                        (valueChange)="settingsService.setTogglJiraKeyStorage(togglJiraKeyStorage.value)">
+                    <mat-option value="ProjectName">Name of project</mat-option>
+                    <mat-option value="Description">Description</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div class="status">User Name: <strong>{{togglService.fullName | async}}</strong>
+            </div>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>Sync</mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-form-field>
+                <input matInput #numOfDaysToSync
+                       placeholder="Number of days to sync"
+                       [value]="settingsService.numOfDaysToSync | async"
+                       (change)="settingsService.setNumOfDaysToSync(+numOfDaysToSync.value)"
+                       type="number"
+                       name="test31">
+            </mat-form-field>
+        </mat-expansion-panel>
+
+    </mat-accordion>
+</form>

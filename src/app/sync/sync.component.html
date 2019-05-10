@@ -1,0 +1,57 @@
+<button mat-flat-button color="primary" (click)="sync()">Sync</button>
+
+<div *ngIf="timeEntries">
+
+    <mat-accordion>
+        <mat-expansion-panel *ngFor="let timeEntry of timeEntries | reverse">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <span>
+                        <span *ngIf="timeEntry.project" class="project-icon" [style.background-color]="timeEntry.project.hex_color"></span>
+                        <a href="{{settingsService.jiraServerUrl | async}}/browse/{{timeEntry.jiraKey}}" target="_blank">{{timeEntry.jiraKey}}</a>
+                    </span>
+                </mat-panel-title>
+                <mat-panel-description>
+                    <div>{{getGermanDate(timeEntry.start)}} — <span
+                            [innerHTML]="getDuration(timeEntry.duration)"></span></div>
+                </mat-panel-description>
+                <mat-panel-description>
+                    <mat-icon *ngIf="timeEntry.project && !timeEntry.matchingWorklogEntry && timeEntry.duration >= 60">
+                        sync
+                    </mat-icon>
+                    <mat-icon *ngIf="timeEntry.matchingWorklogEntry">done</mat-icon>
+                    <!--<mat-icon *ngIf="timeEntry.duration < 50 && timeEntry.duration > 0">remove_circle_outline</mat-icon>-->
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div>Toggl-Description: {{timeEntry.description}}</div>
+            <div>Toggl-Project: <span *ngIf="timeEntry.project">
+                <span class="project-icon" [style.background-color]="timeEntry.project.hex_color"></span>
+                <span [style.color]="timeEntry.project.hex_color">{{timeEntry.project.name}}</span>
+            </span>
+            </div>
+
+            <div>Existing Jira-Worklogs Entries: {{timeEntry.worklog ? timeEntry.worklog.worklogs.length : '--'}}</div>
+            <div>Jira-Worklog:
+                <a *ngIf="timeEntry.matchingWorklogEntry"
+                   href="{{settingsService.jiraServerUrl| async}}/browse/{{timeEntry.jiraKey}}?focusedWorklogId={{timeEntry.matchingWorklogEntry.id}}&page=com.atlassian.jira.plugin.system.issuetabpanels%3Aworklog-tabpanel#worklog-{{timeEntry.matchingWorklogEntry.id}}"
+                   target="_blank">{{timeEntry.matchingWorklogEntry.id}}</a>
+                <span *ngIf="!timeEntry.matchingWorklogEntry">--</span>
+            </div>
+
+            <div class="time-entry-footer">
+                <mat-accordion>
+                    <mat-expansion-panel class="debug">
+                        <mat-expansion-panel-header>
+                            <mat-panel-description>Debug</mat-panel-description>
+                        </mat-expansion-panel-header>
+                        {{timeEntry | json}}
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <button class="btn-delete" mat-flat-button (click)="removeEntry(timeEntry)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

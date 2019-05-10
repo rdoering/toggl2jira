@@ -1,0 +1,25 @@
+<div>
+    <mat-form-field class="settings-full-width">
+        <input matInput placeholder="Jira-Key" (change)="getWorkLogs()" [(ngModel)]="key">
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="getWorkLogs()">Load</button>
+    <span>Found: <span *ngIf="workLog">{{workLog.worklogs.length}}</span></span>
+</div>
+<div>
+    <mat-form-field class="settings-full-width">
+        <input matInput placeholder="User"
+               [value]="settingsService.jiraUserName | async"
+               (change)="settingsService.setJiraUserName($event.valueOf())">
+    </mat-form-field>
+    <mat-form-field class="settings-full-width">
+        <input matInput placeholder="Password"
+               [value]="settingsService.jiraPassword | async"
+               (change)="settingsService.setJiraPassword($event.valueOf())"
+               type="password">
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="login()">Log In</button>
+</div>
+
+<div>
+    <button mat-flat-button color="primary" (click)="logMyself()">Log myself</button>
+</div>
