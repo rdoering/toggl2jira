@@ -151,7 +151,9 @@ export class SyncComponent implements OnInit {
                 break;
 
             case ToggleJiraKeyStorage.Description:
-                jiraKey = timeEntry.description;
+
+                const firstWord = timeEntry.description.match('^\\S*');
+                jiraKey = firstWord.length > 0 ? firstWord[0] : '';
                 break;
         }
         return jiraKey;
