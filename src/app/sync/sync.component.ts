@@ -102,7 +102,9 @@ export class SyncComponent implements OnInit {
         this.togglService.getAllProjects().subscribe(projects => {
                 const projectIdToProject = new Map<number, Project>();
                 for (const project of projects) {
-                    projectIdToProject.set(project.id, project);
+                    if (project) {
+                        projectIdToProject.set(project.id, project);
+                    }
                 }
 
                 this.togglService.getTimeEntries().pipe(map(timeEntries => {
