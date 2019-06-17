@@ -3,7 +3,6 @@ import {MessageService} from '../message.service';
 import {JiraService} from '../jira.service';
 import {Worklog} from './worklog';
 import {SettingsService} from '../settings.service';
-import {Settings} from '../settings/settings';
 
 @Component({
     selector: 'app-jira',
@@ -17,7 +16,7 @@ export class JiraComponent implements OnInit {
     public passwd = '';
     public workLog: Worklog;
 
-    constructor(private messageService: MessageService, private jiraService: JiraService, private settingsService: SettingsService) {
+    constructor(private messageService: MessageService, private jiraService: JiraService, public settingsService: SettingsService) {
     }
 
     ngOnInit() {
