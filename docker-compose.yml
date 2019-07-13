@@ -1,0 +1,11 @@
+version: '3'
+services:
+  dev:
+    image: node:10
+    volumes:
+      - .:/usr/src/service
+    working_dir: /usr/src/service
+    command: bash -c "npm update && npm install --save-dev @angular-devkit/build-angular && npm install -g @angular/cli && ng serve"
+    ports:
+      - 1234:1234
+      - 1235:1235
