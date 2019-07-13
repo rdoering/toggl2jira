@@ -8,5 +8,7 @@ branches:
   - master
 before_script:
   - npm install -g @angular/cli
+  - npm install -g chrome-webstore-upload-cli
 script:
   - ng build --prod --base-href ./
+  - webstore upload --source extension.zip --extension-id $EXTENSION_ID --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN
