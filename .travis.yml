@@ -11,6 +11,7 @@ before_script:
   - npm install -g chrome-webstore-upload-cli
 script:
   - ng build --prod --base-href ./
+  - npm run update-version
 deploy:
   provider: script
   script: webstore upload --source dist/toggl2jira --extension-id $EXTENSION_ID --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN
