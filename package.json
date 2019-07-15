@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "update-version": "dot-json browser/manifest.json version $(date -u +%y.%-m.%-d.%-H%M)"
+    "update-version": "dot-json dist/toggl2jira/manifest.json version $(date -u +%Y.%-m.%-d.%-H%M)"
   },
   "private": true,
   "dependencies": {
