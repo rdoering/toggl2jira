@@ -12,9 +12,9 @@ before_script:
 script:
   - ng build --prod --base-href ./
 deploy:
-  - provider: script
-      script: webstore upload --source dist/toggl2jira --extension-id $EXTENSION_ID --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN
-      skip_cleanup: true
-      on:
-        tags: true
+  provider: script
+  script: webstore upload --source dist/toggl2jira --extension-id $EXTENSION_ID --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN
+  skip_cleanup: true
+  on:
+    tags: true
 
