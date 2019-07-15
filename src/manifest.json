@@ -3,7 +3,7 @@
 
   "name": "Toggl To Jira",
   "description": "Migrate Toggl time entries into Jira as Worklogs.",
-  "version": "1.0",
+  "version": "0.0",
 
   "browser_action": {
     "default_popup": "index.html"
