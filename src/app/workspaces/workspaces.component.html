@@ -1,0 +1,12 @@
+<div *ngIf="projects">
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let project of projects">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+                        <span >{{project.name}}</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      {{project | json}}
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
