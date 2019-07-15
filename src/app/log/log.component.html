@@ -1,5 +1,4 @@
 <button mat-flat-button (click)="messageService.clear()" color="warn">Clear</button>
-<button mat-flat-button (click)="settingsService.load()" color="warn">load</button>
 <div *ngIf="messageService.messages.length">
   <div class="log-item" *ngFor="let msg of messageService.messages.reverse()">{{msg}}</div>
 </div>
