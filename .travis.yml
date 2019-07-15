@@ -5,11 +5,16 @@ dist: xenial
 sudo: required
 branches:
   only:
-  - master
+    - master
 before_script:
   - npm install -g @angular/cli
   - npm install -g chrome-webstore-upload-cli
 script:
   - ng build --prod --base-href ./
 deploy:
-  - webstore upload --source dist/toggl2jira --extension-id $EXTENSION_ID --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN
+  - provider: script
+      script: webstore upload --source dist/toggl2jira --extension-id $EXTENSION_ID --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN
+      skip_cleanup: true
+      on:
+        tags: true
+
