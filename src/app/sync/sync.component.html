@@ -1,4 +1,4 @@
-<button mat-flat-button color="primary" (click)="sync()">Sync</button>
+<button mat-flat-button color="primary" (click)="sync()" [disabled]="!isEachElementFetched()">Sync</button>
 
 <div *ngIf="timeEntries">
 

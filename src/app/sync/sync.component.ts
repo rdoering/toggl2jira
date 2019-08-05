@@ -2,10 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {MessageService} from '../message.service';
 import {SettingsService} from '../settings.service';
 import {TogglService} from '../toggl.service';
-import {TimeEntry} from '../toggl/time.entry';
+import {TimeEntry, TimeEntrySyncState} from '../toggl/time.entry';
 import {map} from 'rxjs/operators';
 import {JiraService} from '../jira.service';
-import {Settings} from '../settings/settings';
 import {WorklogEntry} from '../jira/worklog.entry';
 import {Project} from '../toggl/Project';
 import {ToggleJiraKeyStorage} from '../settings/toggleJiraKeyStorage';
@@ -37,13 +36,18 @@ export class SyncComponent implements OnInit {
             if (!timeEntry.matchingWorklogEntry) {
                 if (timeEntry.jiraKey.length > 0) {
                     this.log('create');
+                  timeEntry.syncState = TimeEntrySyncState.Syncing;
                     this.jiraService.createWorklog(timeEntry.jiraKey, timeEntry.start, timeEntry.duration, timeEntry.description)
                         .subscribe(worklogEntry => {
                                 timeEntry.worklog.worklogs.push(worklogEntry);
                                 timeEntry.matchingWorklogEntry = worklogEntry;
+                                timeEntry.syncState = TimeEntrySyncState.Synced;
                             },
 
-                            err => this.log(`Failed to create worklog entry ${timeEntry.jiraKey}: ${err.error.errorMessages}`)
+                            err => {
+                                timeEntry.syncState = TimeEntrySyncState.SyncFailed;
+                                this.log(`Failed to create worklog entry ${timeEntry.jiraKey}: ${err.error.errorMessages}`);
+                            }
                         );
                 }
             }
@@ -94,6 +98,18 @@ export class SyncComponent implements OnInit {
         }
     }
 
+    isEachElementFetched() {
+      let result = true;
+      for (const timeEntry of this.timeEntries) {
+        switch (timeEntry.syncState) {
+          case TimeEntrySyncState.FetchingJira:
+          case TimeEntrySyncState.Unknown:
+            result = false;
+        }
+      }
+      return result;
+    }
+
     getGermanDate(isoDateTime: string) {
         return new Date(isoDateTime).toLocaleString();
     }
@@ -109,17 +125,28 @@ export class SyncComponent implements OnInit {
 
                 this.togglService.getTimeEntries().pipe(map(timeEntries => {
                     timeEntries.forEach(timeEntry => {
-                        timeEntry.project = this.getProject(timeEntry, projectIdToProject);
-                        timeEntry.jiraKey = this.getJiraKey(timeEntry, projectIdToProject);
+                      timeEntry.syncState = TimeEntrySyncState.Unknown;
+                      timeEntry.project = this.getProject(timeEntry, projectIdToProject);
+                      timeEntry.jiraKey = this.getJiraKey(timeEntry, projectIdToProject);
 
-                        if (timeEntry.jiraKey.length > 0) {
-                            this.jiraService.getWorklogByKey(timeEntry.jiraKey)
-                                .subscribe(worklog => {
-                                        timeEntry.worklog = worklog;
-                                        timeEntry.matchingWorklogEntry = this.getMatchingWorklogEntry(timeEntry);
-                                    },
-                                    err => this.log(`Failed to get jira-worklogs for entry`));
+                      if (timeEntry.jiraKey.length > 0) {
+                        if (timeEntry.duration < 60) {
+                          timeEntry.syncState = TimeEntrySyncState.SyncNotNeeded;
+                        } else {
+                          timeEntry.syncState = TimeEntrySyncState.FetchingJira;
+                          this.jiraService.getWorklogByKey(timeEntry.jiraKey)
+                            .subscribe(worklog => {
+                                timeEntry.worklog = worklog;
+                                timeEntry.matchingWorklogEntry = this.getMatchingWorklogEntry(timeEntry);
+
+                                const syncNeeded = TimeEntrySyncState.SyncNeeded;
+                                const synced = TimeEntrySyncState.Synced;
+                                timeEntry.syncState = timeEntry.matchingWorklogEntry == null ? syncNeeded : synced;
+                              },
+                              err => this.log(`Failed to get jira-worklogs for entry`));
                         }
+                        }
+
                     });
 
                     return timeEntries;

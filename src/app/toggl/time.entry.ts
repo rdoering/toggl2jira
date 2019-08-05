@@ -2,6 +2,17 @@ import {Project} from './Project';
 import {Worklog} from '../jira/worklog';
 import {WorklogEntry} from '../jira/worklog.entry';
 
+export enum TimeEntrySyncState {
+  Unknown = 'Unknown',
+  FetchingJira = 'FetchingJira',
+  SyncNeeded = 'SyncNeeded',
+  Syncing = 'Syncing',
+  SyncNotNeeded = 'SyncNotNeeded',
+  SyncFailed = 'SyncFailed',
+  Synced = 'Synced',
+}
+
+
 export class TimeEntry {
     id: number;
     guid: string;
@@ -19,4 +30,5 @@ export class TimeEntry {
     worklog?: Worklog;
     matchingWorklogEntry: WorklogEntry;
     jiraKey: string;
+    syncState: TimeEntrySyncState;
 }
