@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import {SettingsComponent} from './settings/settings.component';
 import {SyncComponent} from './sync/sync.component';
 import {LogComponent} from './log/log.component';
-import {WorkspacesComponent} from './workspaces/workspaces.component';
+import {AboutComponent} from './about/about.component';
 
 const routes: Routes = [
   {path: 'sync', component: SyncComponent},
@@ -11,7 +11,7 @@ const routes: Routes = [
 
   {path: 'settings', component: SettingsComponent},
   {path: 'log', component: LogComponent},
-  {path: 'ws', component: WorkspacesComponent},
+  {path: 'about', component: AboutComponent},
 ];
 
 @NgModule({

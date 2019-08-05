@@ -22,6 +22,7 @@ import {JiraComponent} from './jira/jira.component';
 import {LogComponent} from './log/log.component';
 import {WorkspacesComponent } from './workspaces/workspaces.component';
 import {ReversePipe} from './pipes/reverse.pipe';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
     declarations: [
@@ -31,7 +32,8 @@ import {ReversePipe} from './pipes/reverse.pipe';
         JiraComponent,
         LogComponent,
         WorkspacesComponent,
-        ReversePipe
+        ReversePipe,
+        AboutComponent
     ],
     imports: [
         BrowserModule,
