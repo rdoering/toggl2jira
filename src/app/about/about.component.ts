@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 export class AboutComponent implements OnInit {
 
   // @ts-ignore
-  private manifest: chrome.runtime.Manifest;
+  public manifest: chrome.runtime.Manifest;
 
   constructor() { }
   ngOnInit() {
