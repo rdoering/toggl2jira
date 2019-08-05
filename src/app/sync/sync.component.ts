@@ -99,6 +99,10 @@ export class SyncComponent implements OnInit {
     }
 
     isEachElementFetched() {
+      if (this.timeEntries == null) {
+        return false;
+      }
+
       let result = true;
       for (const timeEntry of this.timeEntries) {
         switch (timeEntry.syncState) {
@@ -179,7 +183,7 @@ export class SyncComponent implements OnInit {
 
             case ToggleJiraKeyStorage.Description:
 
-                const firstWord = timeEntry.description.match('^\\S*');
+                const firstWord = timeEntry.description == null ? '' : timeEntry.description.match('^\\S*');
                 jiraKey = firstWord.length > 0 ? firstWord[0] : '';
                 break;
         }
