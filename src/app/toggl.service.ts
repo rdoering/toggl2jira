@@ -13,7 +13,7 @@ import {Me} from './toggl/Me';
     providedIn: 'root'
 })
 export class TogglService {
-    private togglUrlBase = 'https://toggl.com';
+    private togglUrlBase = 'https://api.track.toggl.com';
 
     private projectCache: Map<number, Observable<Project>>;
 
