@@ -1,4 +1,4 @@
-# Toggl To Jira [![Build Status](https://travis-ci.org/rdoering/toggl2jira.svg?branch=master)](https://travis-ci.org/rdoering/toggl2jira)
+# Toggl To Jira [![Build Status](https://travis-ci.com/rdoering/toggl2jira.svg?branch=master)](https://travis-ci.com/rdoering/toggl2jira)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1.3.
 
