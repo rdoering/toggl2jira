@@ -1,10 +1,10 @@
 version: '3'
 services:
   dev:
-    image: node:10
+    image: node:12
     volumes:
       - .:/usr/src/service
     working_dir: /usr/src/service
-    command: bash -c "npm install -g @angular/cli && npm install -g chrome-webstore-upload-cli && ng serve"
+    command: bash -c "npm install -g @angular/cli && npm install -g chrome-webstore-upload-cli && npm install && ng serve --disable-host-check --host 0.0.0.0"
     ports:
       - 4200
