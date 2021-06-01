@@ -17,6 +17,7 @@ import {ToggleJiraKeyStorage} from '../settings/toggleJiraKeyStorage';
 export class SyncComponent implements OnInit {
 
     public timeEntries: TimeEntry[];
+    private jiraKeyToDelayMs = new Map();
 
     constructor(
         private messageService: MessageService,
@@ -29,27 +30,32 @@ export class SyncComponent implements OnInit {
         this.getTimeEntriesWithProjects();
     }
 
-    sync() {
+
+    async  sync() {
         this.log('start syncing');
         this.timeEntries.forEach(timeEntry => {
-            this.log(`entry ${timeEntry.id}`);
-            if (!timeEntry.matchingWorklogEntry) {
-                if (timeEntry.jiraKey.length > 0) {
-                    this.log('create');
-                  timeEntry.syncState = TimeEntrySyncState.Syncing;
-                    this.jiraService.createWorklog(timeEntry.jiraKey, timeEntry.start, timeEntry.duration, timeEntry.description)
-                        .subscribe(worklogEntry => {
+          this.log(`entry ${timeEntry.id}`);
+          const noMatchingWorklogEntry = !timeEntry.matchingWorklogEntry;
+          const hasJiraKey = timeEntry.jiraKey.length > 0;
+          const isNotRunning = timeEntry.duration > 0;
+          if (noMatchingWorklogEntry && hasJiraKey && isNotRunning) {
+                this.log('create');
+                timeEntry.syncState = TimeEntrySyncState.Syncing;
+                setTimeout(() =>
+                    {
+                        this.jiraService.createWorklog(timeEntry.jiraKey, timeEntry.start, timeEntry.duration, timeEntry.description)
+                            .subscribe(worklogEntry => {
                                 timeEntry.worklog.worklogs.push(worklogEntry);
                                 timeEntry.matchingWorklogEntry = worklogEntry;
                                 timeEntry.syncState = TimeEntrySyncState.Synced;
-                            },
-
-                            err => {
+                              },
+                              err => {
                                 timeEntry.syncState = TimeEntrySyncState.SyncFailed;
                                 this.log(`Failed to create worklog entry ${timeEntry.jiraKey}: ${err.error.errorMessages}`);
-                            }
-                        );
-                }
+                              }
+                            );
+                    },
+                    this.getDelayForJiraKeyAndIncrease(timeEntry.jiraKey));
             }
         });
         this.log('finished syncing');
@@ -214,6 +220,14 @@ export class SyncComponent implements OnInit {
             result = hours + ':' + minutes + ':' + seconds;
         }
         return result;
+    }
 
+    getDelayForJiraKeyAndIncrease(jiraKey:string) {
+      let delay = this.jiraKeyToDelayMs.has(jiraKey) ? this.jiraKeyToDelayMs.get(jiraKey) : 0;
+
+      let newDelay = delay + 1000;
+      this.jiraKeyToDelayMs.set(jiraKey, newDelay);
+
+      return delay;
     }
 }
